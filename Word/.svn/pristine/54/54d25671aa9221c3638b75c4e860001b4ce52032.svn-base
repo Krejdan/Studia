@@ -1,0 +1,108 @@
+package application;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import daos.UserDao;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import tables.User;
+
+public class LoginController implements Initializable {
+
+	@FXML
+	private Button IPGroupMembersButton;
+
+	@FXML
+	private TextField usernameField;
+
+	@FXML
+	private PasswordField passwordField;
+
+	@FXML
+	private Button loginButton;
+
+	@FXML
+	private Button helpButton;
+
+	@FXML
+	void loginButtonClick(ActionEvent event) throws IOException {
+		//if (verifyLogin()) {
+		String username = usernameField.getText();
+		if(username.equals("teo")) {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("TheoreticalExam.fxml"));
+			Parent theoreticalExamView = loader.load();
+			Scene theoreticalExamScene = new Scene(theoreticalExamView);
+			
+			TheoreticalExamController theoreticalExamController = loader.getController();
+			theoreticalExamController.initUser(new User());
+	
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window.setScene(theoreticalExamScene);
+			window.show();
+		}
+		if(username.equals("practical")) {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("ExaminerMainView.fxml"));
+			Parent examinerView = loader.load();
+			Scene examinerMainScene = new Scene(examinerView);
+			
+			ExaminerViewController examinerViewController = loader.getController();
+			UserDao userDao = new UserDao();
+			examinerViewController.initUser(userDao.get(2));
+	
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window.setScene(examinerMainScene);
+			window.show();
+		}
+		if(username.equals("order"))
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("OrderTermView.fxml"));
+			Parent orderTermView = loader.load();
+			Scene orderTermScene = new Scene(orderTermView);
+			
+			OrderTermController orderTermController = loader.getController();
+			orderTermController.initUser(new User());
+	
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window.setScene(orderTermScene);
+			window.show();
+		}
+	}
+
+	@FXML
+	void IPGroupMembersButtonOnClick(ActionEvent event) {
+		AlertBox.display("Sk³ad grupy", "Grupa: 3ID14A\nTemat: WORD\nAleksandra Chabik\nAdrian Cheba\nKamil Dudek\nPrzemys³aw Gar³owski");
+	}
+
+	@FXML
+	void helpButtonOnClick(ActionEvent event) {
+		AlertBox.display("Pomoc", "Nazwa u¿ytkownika: admin\nHas³o: admin\n");
+	}
+
+	boolean verifyLogin() {
+		String username = usernameField.getText();
+		String password = passwordField.getText();
+		System.out.println(username + " " + password);
+		return (username.equals("admin") && password.equals("admin"));
+	}
+
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

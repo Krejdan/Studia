@@ -1,0 +1,128 @@
+package server;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import tables.ExamResult;
+import tables.ExamTask;
+import tables.ExaminationCard;
+import tables.Question;
+import tables.Term;
+import tables.TheoreticalExam;
+import tables.User;
+
+public class Request implements Serializable {
+
+	private static final long serialVersionUID = 7452698369112838545L;
+	
+	private RequestType type;
+	private LocalDate date;
+	private User user;
+	private ExamResult examResult = new ExamResult();
+	private ExaminationCard examinationCard;
+	private TheoreticalExam theoreticalExam;
+	private Term term;
+	private String mail;
+	private String password;
+	private String message;
+	private Boolean result;
+	private List<Question> questions = new ArrayList<>();
+	private List<String> answers = new ArrayList<>();
+	private int points;
+	
+	public RequestType getType() {
+		return type;
+	}
+	public void setType(RequestType type) {
+		this.type = type;
+	}
+	public LocalDate getDate() {
+		return date;
+	}
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public ExamResult getExamResult() {
+		return examResult;
+	}
+	public void setExamResult(ExamResult examResult) {
+		this.examResult = examResult;
+	}
+	public ExaminationCard getExaminationCard() {
+		return examinationCard;
+	}
+	public void setExaminationCard(ExaminationCard examinationCard) {
+		this.examinationCard = examinationCard;
+	}
+	public TheoreticalExam getTheoreticalExam() {
+		return theoreticalExam;
+	}
+	public void setTheoreticalExam(TheoreticalExam theoreticalExam) {
+		this.theoreticalExam = theoreticalExam;
+	}
+	public Term getTerm() {
+		return term;
+	}
+	public void setTerm(Term term) {
+		this.term = term;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public Boolean getResult() {
+		return result;
+	}
+	public void setResult(Boolean result) {
+		this.result = result;
+	}
+	public List<Question> getQuestions() {
+		return questions;
+	}
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+	public List<String> getAnswers() {
+		return answers;
+	}
+	public void setAnswers(List<String> answers) {
+		this.answers = answers;
+	}
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	@Override
+	public String toString() {
+		return "Request [type=" + type + ", date=" + date + ", user=" + user + ", examResult=" + examResult
+				+ ", examinationCard=" + examinationCard + ", term=" + term + ", mail=" + mail + ", password="
+				+ password + "]";
+	}
+	
+	
+	
+}

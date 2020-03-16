@@ -1,0 +1,90 @@
+package application;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import daos.ExaminationCardDao;
+import daos.UserDao;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import tables.ExaminationCard;
+import tables.User;
+
+public class ExaminerViewController implements Initializable {
+
+	@FXML
+	private Button showExamsButton;
+
+	@FXML
+	private Button unlockExamButton;
+
+	@FXML
+	private Button downloadExamCardButton;
+
+	private User user;
+
+	public void initUser(User user) {
+		this.user = user;
+	}
+
+	@FXML
+	void downloadExamCardClicked(ActionEvent event) {
+		ExaminationCardDao examDao = new ExaminationCardDao();
+
+		ExaminationCard exam = examDao.getFirstAvailable();
+		if (exam != null) {
+			exam.setExaminer(this.user);
+			examDao.update(exam);
+			startPracticalExam(exam);
+		} else {
+			AlertBox.display("Brak egzaminow!", "Brak dostepnych kart egzaminacyjnych");
+		}
+	}
+
+	@FXML
+	void showExamsClicked(ActionEvent event) {
+
+	}
+
+	@FXML
+	void unlockTheoreticalExamClicked(ActionEvent event) {
+
+	}
+
+	private void startPracticalExam(ExaminationCard exam) {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("PracticalExamView.fxml"));
+		Parent practicalExamView;
+		try {
+			practicalExamView = loader.load();
+			Scene practicalExamScene = new Scene(practicalExamView);
+
+			PracticalExamController practicalExamController = loader.getController();
+			UserDao userDao = new UserDao();
+			practicalExamController.initUser(this.user);
+			practicalExamController.initExam(exam);
+
+			Stage window = (Stage) downloadExamCardButton.getScene().getWindow();
+			window.setScene(practicalExamScene);
+			window.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

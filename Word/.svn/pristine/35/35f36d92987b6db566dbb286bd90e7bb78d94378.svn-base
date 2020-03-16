@@ -1,0 +1,33 @@
+package tables;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Cars")
+public class Car {
+	
+	@Id
+	@Column(name="car_id")
+	private int carNumber;
+
+	public Car() {
+		super();
+	}
+
+	public Car(int carNumber) {
+		super();
+		this.carNumber = carNumber;
+	}
+
+	public int getCarNumber() {
+		return carNumber;
+	}
+
+	public void setCarNumber(int carNumber) {
+		this.carNumber = carNumber;
+	};
+	
+}

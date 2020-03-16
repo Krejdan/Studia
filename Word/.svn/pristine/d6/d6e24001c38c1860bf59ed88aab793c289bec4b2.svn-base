@@ -1,0 +1,113 @@
+package daos;
+	
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import tables.Term;
+import util.HibernateUtil;
+
+public class TermDAO implements Dao<Term> {
+
+	@Override
+	public void add(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }	
+	}
+
+	@Override
+	public void delete(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.delete(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	@Override
+	public void update(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.update(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	public Term get(int id) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	Term term = null;
+    	
+    	try {
+            transaction = session.beginTransaction();
+            term = session.get(Term.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return term;
+	}
+
+	@Override
+	public List<Term> getAll() {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	List<Term> terms = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			terms = session.createQuery("from Term", Term.class).list();
+            transaction.commit();
+        } catch (Exception e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return terms;
+	}
+
+}

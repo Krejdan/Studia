@@ -1,0 +1,68 @@
+package tables;
+
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="QuestionResult")
+public class QuestionResult {
+
+	@EmbeddedId
+	private QuestionResultId id;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@MapsId("questionId")
+	private Question question;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@MapsId("examResultId")
+	private ExamResult examResult;
+	
+	@Column(name="user_answer")
+	private String userAnswer;
+	
+	@Column(name="result")
+	private int result;
+	
+	public QuestionResult() {
+		
+	}
+
+	public QuestionResult(Question question, ExamResult examResult, int result, String userAnswer) {
+		this.question = question;
+		this.examResult = examResult;
+		this.result = result;
+		this.userAnswer = userAnswer;
+	}
+
+	public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
+	public ExamResult getExamResult() {
+		return examResult;
+	}
+
+	public void setExamResult(ExamResult examResult) {
+		this.examResult = examResult;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+	
+}

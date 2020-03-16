@@ -1,0 +1,133 @@
+package application;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import daos.ExamCategoryDao;
+import daos.ExamTaskDao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
+import tables.ExamTask;
+import tables.ExamTaskResult;
+import tables.ExaminationCard;
+import tables.User;
+
+public class PracticalExamController implements Initializable {
+
+    @FXML
+    private TableView<ExamTaskResult> tasksTable;
+
+    @FXML
+    private TableColumn<ExamTaskResult, ExamTask> tasksColumn;
+
+    @FXML
+    private TableColumn<ExamTaskResult, Integer> passedColumn;
+
+    @FXML
+    private TableColumn<ExamTaskResult, Integer> mistake1Column;
+
+    @FXML
+    private TableColumn<ExamTaskResult, Integer> mistake2Column;
+
+    @FXML
+    private Button scoreButton;
+
+    @FXML
+    private Button firstMistakeButton;
+
+    @FXML
+    private Button secondMistakeButton;
+
+    @FXML
+    private Label firstNameLabel;
+
+    @FXML
+    private Label lastNameLabel;
+
+    @FXML
+    private Label dateLabel;
+
+    @FXML
+    private Label categoryLabel;
+
+    @FXML
+    private TextArea commentArea;
+
+    @FXML
+    private Button endExamButton;
+    @FXML
+    
+    private User user;
+
+    public void initUser(User user) {
+    	this.user = user;
+    }
+    
+    @FXML
+    void endExamOnClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void firstMistakeOnClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void scoreOnClick(ActionEvent event) {
+    	
+    }
+    	
+    @FXML
+    void secondMistakeOnClick(ActionEvent event) {
+
+    }
+    
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		ExamTaskDao examTaskDao = new ExamTaskDao();
+		ExamCategoryDao examCategoryDao = new ExamCategoryDao();
+		
+		List<ExamTask> examTaskList = examTaskDao.getAll();
+		
+		ExaminationCard examCard = new ExaminationCard();
+		examTaskList = examTaskDao.get(examCategoryDao.get("B"));
+		//examCard.setExamTasks(examTaskList.get(1).getExaminationCards());
+		
+		System.out.println(examTaskList);
+		
+		
+		
+		ObservableList<ExamTaskResult> taskResults = FXCollections.observableArrayList();
+
+		//ObservableList<ExamTaskResult> taskResults = examTaskList.;
+		
+		taskResults.add(new ExamTaskResult(0, examTaskList.get(0), new ExaminationCard()));
+		taskResults.add(new ExamTaskResult(1, examTaskList.get(1), new ExaminationCard()));
+		
+		tasksColumn.setCellValueFactory(new PropertyValueFactory<ExamTaskResult, ExamTask>("examTask"));
+		passedColumn.setCellValueFactory(new PropertyValueFactory<ExamTaskResult, Integer>("result"));
+		mistake1Column.setCellValueFactory(new PropertyValueFactory<ExamTaskResult, Integer>("result"));
+		mistake2Column.setCellValueFactory(new PropertyValueFactory<ExamTaskResult, Integer>("result"));
+
+		tasksTable.setItems(taskResults);
+		
+		
+
+	
+		
+	}
+
+}

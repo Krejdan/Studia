@@ -1,0 +1,154 @@
+package daos;
+	
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import tables.Day;
+import tables.Hour;
+import tables.Month;
+import tables.Term;
+import tables.Year;
+import util.HibernateUtil;
+
+public class TermDAO implements Dao<Term> {
+
+	@Override
+	public void add(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }	
+	}
+
+	@Override
+	public void delete(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.delete(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	@Override
+	public void update(Term entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	public Term get(Year year, Month month, Day day, Hour hour) throws NoResultException{
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	Term term = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Term where year = :year and month = :month and day = :day and hour = :hour", Term.class);
+			query.setParameter("hour", hour);
+			query.setParameter("day", day);
+			query.setParameter("month", month);
+			query.setParameter("year", year);
+			term = (Term) query.getSingleResult();
+            transaction.commit();
+        } catch (NoResultException e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	throw e;
+        } finally {
+        	session.close();
+        }
+		return term;
+	}
+	
+	public Term get(int id) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	Term term = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			term = session.get(Term.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return term;
+	}
+
+	@Override
+	public List<Term> getAll() {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	List<Term> terms = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			terms = session.createQuery("from Term", Term.class).list();
+            transaction.commit();
+        } catch (Exception e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return terms;
+	}
+	
+	public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> c) {
+	    List<T> r = new ArrayList<T>(c.size());
+	    for(Object o: c)
+	      r.add(clazz.cast(o));
+	    return r;
+	}
+
+}

@@ -1,0 +1,166 @@
+.root {
+    /*-fx-background-image: url("../Images/background.jpg"); */
+    -fx-background-color: #1d1d1d;
+}
+
+.label {
+    -fx-font-size: 12.0pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+    -fx-opacity: 1.0;
+}
+
+
+.text-field {
+    -fx-font-size: 12.0pt;
+    -fx-font-family: "Segoe UI Semibold";
+}
+
+.password-field {
+    -fx-font-size: 12.0pt;
+    -fx-font-family: "Segoe UI Semibold";
+
+}
+
+.radio-button {
+	-fx-font-size: 12.0pt;
+    -fx-font-family: "Segoe UI";
+	-fx-text-fill: white;
+	-fx-background-image: null;
+}
+
+.radio-button .radio {
+	-fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+    -fx-border-radius: 0;
+    -fx-background-color: #1d1d1d;
+}
+
+.radio-button .radio:selected {
+	-fx-border-color: #e2e2e2;
+    -fx-border-width: 15;
+    -fx-background-radius: 0;
+}
+
+.radio-button .dot {
+	-fx-background-radius: 0.0;
+	-fx-background-insets: 0.0 0.0 0.0 0.0, 0.0, 1.0, 2.0;
+	-fx-mark-highlight-color: white;
+	-fx-mark-color: white ;
+	
+}
+
+.radio-button .radio:hover {
+	-fx-background-color: #3a3a3a;
+	-fx-background-radius: 0;
+}
+
+.resultEmote {
+	-fx-font-size: 124.0pt;
+	
+}
+
+.examResultText {
+	-fx-font-size: 36.0pt;
+}
+
+/*
+.radio-button .dot {
+	-fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+}
+*/
+
+#questionPane {
+	-fx-border-color: gray;
+    -fx-border-width: 2.0;	
+}
+
+#answerPane {
+	-fx-border-color: gray;
+    -fx-border-width: 2.0;	
+}
+
+.list-view {
+	 -fx-background-color: #1d1d1d;
+	 -fx-text-fill: white;
+	 -fx-font-size: 12.0pt;
+	 -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	 -fx-border-color: white;
+     -fx-border-width: 2.0;	
+}
+
+.list-cell {
+	 -fx-background-color: #1d1d1d;
+	 -fx-text-fill: white;
+	 -fx-font-size: 12.0pt;
+	 -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+	-fx-background-color: #636767;	
+}
+
+.list-cell:filled:hover {
+	-fx-background-color: #464848;	
+}
+
+#commentsArea {
+	 -fx-background-color: #636767;
+	 -fx-text-fill: white;
+	 -fx-font-size: 12.0pt;
+	 -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;	
+}
+
+#commentsArea .content {
+	 -fx-background-color: #464848;
+	 -fx-border-color: white;
+     -fx-border-width: 2.0;	
+	
+}
+
+
+.button {
+    -fx-padding: 5.0 22.0 5.0 22.0;   
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2.0;
+    -fx-background-radius: 0.0;
+    -fx-background-color: #1d1d1d;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11.0pt;
+    -fx-text-fill: #d8d8d8;
+    -fx-background-insets: 0.0 0.0 0.0 0.0, 0.0, 1.0, 2.0;
+}
+
+.button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.button:pressed, .button:default:hover:pressed {
+  -fx-background-color: white;
+  -fx-text-fill: #1d1d1d;
+}
+
+.button:focused {
+    -fx-border-color: white, white;
+    -fx-border-width: 1.0, 1.0;
+    -fx-border-style: solid, segments(1.0, 1.0);
+    -fx-border-radius: 0.0, 0.0;
+    -fx-border-insets: 1.0 1.0 1.0 1.0, 0.0;
+}
+
+.button:disabled, .button:default:disabled {
+    -fx-opacity: 0.4;
+    -fx-background-color: #1d1d1d;
+    -fx-text-fill: white;
+}
+
+.button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30.0%);
+}

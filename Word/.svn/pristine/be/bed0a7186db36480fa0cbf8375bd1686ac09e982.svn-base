@@ -1,0 +1,131 @@
+package util;
+
+import java.util.Date;
+
+import daos.*;
+import tables.*;
+
+public class InitializeDatabase {
+
+	public static void initializeTerms() {
+		
+		HourDao hourDao = new HourDao();
+		YearDao yearDao = new YearDao();
+		MonthDao monthDao = new MonthDao();
+		DayDao dayDao = new DayDao();
+		
+		Hour hour = new Hour();
+		
+		for(int i=8; i<18; i++)
+		{
+			hour = new Hour(i, 0);
+			hourDao.add(hour);
+			hour = new Hour(i, 30);
+			hourDao.add(hour);
+			
+		}
+		
+		Day day = new Day();
+		
+		for(int i=1; i<32; i++)
+		{
+			day = new Day(i);
+			dayDao.add(day);
+		}
+		
+		Month month = new Month();
+		
+		for(int i=1; i<13; i++)
+		{
+			month = new Month(i);
+			monthDao.add(month);
+		}
+		
+		Year year = new Year();
+		
+		for(int i=2019; i<2101; i++)
+		{
+			year = new Year(i);
+			yearDao.add(year);
+		}
+	}
+	
+	public static void initializeResources() {
+		ResourceDao resourceDao = new ResourceDao();
+		
+		Resource resource = new Resource("ExaminationCard");
+		resourceDao.add(resource);
+		resource = new Resource("Question");
+		resourceDao.add(resource);
+		resource = new Resource("ExamResult");
+		resourceDao.add(resource);
+		resource = new Resource("TheoreticalExam");
+		resourceDao.add(resource); 
+	}
+	
+	public static void initializePositions() {
+		PositionDao positionDao = new PositionDao();
+		
+		Position position = new Position("Gosc", "gosc");
+		positionDao.add(position);
+		
+		position = new Position("Egzaminator", "egzaminator");
+		positionDao.add(position);
+		
+		position = new Position("Klient", "klient");
+		positionDao.add(position);
+		
+		position = new Position("Pracownik administracyjny", "Pracownik administracyjny");
+		positionDao.add(position);
+	}
+	
+	public static void initializeCategories() {
+		ExamCategoryDao examCategoryDao = new ExamCategoryDao(); 
+		ExamCategory examCategory = new ExamCategory("A");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("B");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("C");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("D");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("A1");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("E");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("F");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("G");
+		examCategoryDao.add(examCategory);
+		examCategory = new ExamCategory("B1");
+		examCategoryDao.add(examCategory);
+	}
+	
+	public static void main(String[] args) {
+		PositionDao positionDao = new PositionDao();
+		UserDao userDao = new UserDao();
+		TermDAO terminDao = new TermDAO();
+		HourDao hourDao = new HourDao();
+		YearDao yearDao = new YearDao();
+		MonthDao monthDao = new MonthDao();
+		DayDao dayDao = new DayDao();
+		
+		initializeTerms();
+		initializePositions();
+		initializeResources();
+		initializeCategories();
+		User user = new User("Ramesh", "Fadatare", new Date(), "test@test.com", "12345");
+		User user1 = new User("Emil", "Emil", new Date(), "test@test.test", "54321");
+		user.addPosition(positionDao.getByName("Egzaminator"));
+		user1.addPosition(positionDao.getByName("Klient"));
+		userDao.add(user1);
+		userDao.add(user);
+		Term term = new Term(yearDao.get(2020), monthDao.get(6), dayDao.get(12), hourDao.getByHourAndMinute(12, 30));
+		terminDao.add(term);
+		
+
+				
+		
+	}
+	
+}

@@ -1,0 +1,80 @@
+package tables;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="operations")
+public class Operation {
+	
+	@Id
+	@SequenceGenerator(name="operationsSeq", sequenceName="operations_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="operationsSeq")
+	@Column(name="operation_id")
+	private int operationId;
+	
+	@Column(name="name")
+	private String name;
+
+	@Column(name="type")
+	private int type;
+	
+	@OneToMany(
+			mappedBy="operation",
+			cascade= {CascadeType.PERSIST, CascadeType.MERGE}
+	)
+	private List<Permission> permissions;
+	
+	//Operation.add
+	
+	public Operation() {
+		
+	}
+
+	public Operation(String name, int type) {
+		super();
+		this.name = name;
+		this.type = type;
+	}
+
+	public int getOperationId() {
+		return operationId;
+	}
+
+	public void setOperationId(int operationId) {
+		this.operationId = operationId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "Operation [operationId=" + operationId + ", name=" + name + ", type=" + type + "]";
+	}
+	
+	
+	
+}

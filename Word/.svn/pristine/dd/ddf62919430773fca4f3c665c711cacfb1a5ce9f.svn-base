@@ -1,0 +1,74 @@
+package repositories;
+	
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import tables.Term;
+import tables.User;
+import util.HibernateUtil;
+
+public class TerminDAO {
+
+    public void saveTermin(Term termin) {
+
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+
+            // start a transaction
+
+            transaction = session.beginTransaction();
+
+            // save the object
+            session.save(termin);
+
+            // commit transaction
+
+            transaction.commit();
+            System.out.println("Dodawanie udane");
+
+        } catch (Exception e) {
+
+            if (transaction != null) {
+
+                transaction.rollback();
+
+            }
+
+            e.printStackTrace();
+
+        } finally {
+        	session.close();
+        }
+
+    }
+    
+    public List < Term > getTerm() {
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            return session.createQuery("from Term", Term.class).list();
+
+        }
+
+    }
+    
+    public User getUserById(int user_id) {
+        Session session = null;
+        User user = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            user =  (User) session.get(User.class, user_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return user;
+    }
+
+}

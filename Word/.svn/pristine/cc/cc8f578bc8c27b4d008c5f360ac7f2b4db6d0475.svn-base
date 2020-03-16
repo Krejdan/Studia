@@ -1,0 +1,147 @@
+package daos;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import tables.ExamCategory;
+import tables.ExamTask;
+import util.HibernateUtil;
+
+public class ExamTaskDao implements Dao<ExamTask> {
+	
+	@Override
+	public void add(ExamTask entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }	
+	}
+
+	@Override
+	public void delete(ExamTask entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.delete(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	@Override
+	public void update(ExamTask entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.update(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		
+	}
+
+	public ExamTask get(int id) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	ExamTask examTask = null;
+    	
+    	try {
+            transaction = session.beginTransaction();
+            examTask = session.get(ExamTask.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return examTask;
+	}
+
+	@Override
+	public List<ExamTask> getAll() {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	List<ExamTask> examTasks = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			examTasks = session.createQuery("from ExamTask", ExamTask.class).list();
+            transaction.commit();
+        } catch (Exception e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return examTasks;
+	}
+	
+	public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> c) {
+	    List<T> r = new ArrayList<T>(c.size());
+	    for(Object o: c)
+	      r.add(clazz.cast(o));
+	    return r;
+	}
+	
+	public List<ExamTask> get(ExamCategory category) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	List<ExamTask> examTasks = null;
+    	
+		try {
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select et from ExamTask et, IN (et.categories) c where c = :category", ExamTask.class);
+			query.setParameter("category", category);
+			examTasks = castList(ExamTask.class, query.getResultList());
+            transaction.commit();
+        } catch (Exception e) {
+        	if(transaction != null) {
+        		transaction.rollback();
+        	}
+        	e.printStackTrace();
+        } finally {
+        	session.close();
+        }
+		return examTasks;
+	}
+	
+}

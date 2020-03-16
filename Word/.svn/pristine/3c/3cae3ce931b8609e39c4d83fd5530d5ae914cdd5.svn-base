@@ -1,0 +1,114 @@
+package application;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import server.Request;
+import server.RequestType;
+import tables.ExamCategory;
+import tables.Term;
+import tables.TheoreticalExam;
+import tables.User;
+import util.Connection;
+
+public class UnlockTheoreticalExamController implements Initializable {
+
+	@FXML
+	private Button cancelButton;
+
+	@FXML
+	private TableView<TheoreticalExam> examsTableView;
+
+	@FXML
+	private TableColumn<TheoreticalExam, Term> termColumn;
+
+	@FXML
+	private TableColumn<TheoreticalExam, ExamCategory> categoryColumn;
+
+	@FXML
+	private TableColumn<TheoreticalExam, Integer> examineeNumberColumn;
+
+	@FXML
+	private Button unlockExamButton;
+
+	private User user;
+
+	public void initUser(User user) {
+		this.user = user;
+	}
+
+	@FXML
+	void cancelButtonOnClick(ActionEvent event) {
+
+	}
+
+	@FXML
+	void unlockExamOnClick(ActionEvent event) {
+		Connection.request = new Request();
+		Connection.request.setType(RequestType.OPEN_THEORETICAL_EXAM);
+		Connection.request.setTheoreticalExam(examsTableView.getSelectionModel().getSelectedItem());
+		Connection.request.setUser(user);
+		try {
+			Connection.getOutput().writeObject(Connection.request);
+			Request received = (Request) Connection.getInput().readObject();
+			if(received.getResult()) {
+				AlertBox.display("Wynik otwarcia", received.getMessage());
+			}
+			else {
+				AlertBox.display("Wynik otwarcia", received.getMessage());
+			}
+				
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+		termColumn.setCellValueFactory(new PropertyValueFactory<TheoreticalExam, Term>("term"));
+		categoryColumn.setCellValueFactory(new PropertyValueFactory<TheoreticalExam, ExamCategory>("category"));
+		examineeNumberColumn.setCellValueFactory(new PropertyValueFactory<TheoreticalExam, Integer>("examineeNumber"));
+		//Platform.runLater(() -> {
+			try {
+				Connection.request = new Request();
+				Connection.request.setType(RequestType.GET_THEORETICAL_EXAMS);
+				LocalDate localDate = LocalDate.of(2020, 6, 12);
+				Connection.request.setDate(localDate);
+				Connection.getOutput().writeObject(Connection.request);
+				
+				List<TheoreticalExam> exams = (List<TheoreticalExam>) Connection.getInput().readObject();
+
+				ObservableList<TheoreticalExam> observableExams = FXCollections.observableArrayList(exams);
+				examsTableView.getItems().addAll(observableExams);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		//});
+
+	}
+}

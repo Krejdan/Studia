@@ -1,0 +1,41 @@
+package repositories;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import tables.Resource;
+import util.HibernateUtil;
+
+public class ResourcesDAO {
+	public void saveResource(Resource resource) {
+
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            // start a transaction
+
+            transaction = session.beginTransaction();
+
+            // save the object
+            
+            session.save(resource);
+
+            // commit transaction
+
+            transaction.commit();
+            System.out.println("Dodawanie udane");
+
+        } catch (Exception e) {
+
+            if (transaction != null) {
+
+                transaction.rollback();
+
+            }
+
+            e.printStackTrace();
+
+        }
+
+    }
+}

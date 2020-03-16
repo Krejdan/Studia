@@ -1,0 +1,150 @@
+package application;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import daos.CarDao;
+import daos.DayDao;
+import daos.ExamCategoryDao;
+import daos.ExamResultDao;
+import daos.ExaminationCardDao;
+import daos.HourDao;
+import daos.MonthDao;
+import daos.TermDAO;
+import daos.YearDao;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import tables.Car;
+import tables.Day;
+import tables.ExamCategory;
+import tables.ExamResult;
+import tables.Hour;
+import tables.Month;
+import tables.Term;
+import tables.TheoreticalExam;
+import tables.User;
+import tables.Year;
+
+public class OrderTermController implements Initializable {
+
+	@FXML
+	private ChoiceBox<ExamCategory> categoryChoiceBox;
+	@FXML
+	private DatePicker datePicker;
+	@FXML
+	private Button checkAvailableButton;
+	@FXML
+	private Button orderTermButton;
+	@FXML
+	private Button returnButton;
+	@FXML
+	private ListView<Term> termsList;
+
+	private User user;
+
+	public void initUser(User user) {
+		this.user = user;
+	}
+
+	@FXML
+	private void chceckAvailableOnClick(ActionEvent event) {
+		orderTermButton.setDisable(true);
+		
+		if(datePicker.getValue() == null || categoryChoiceBox.getSelectionModel().getSelectedItem() == null)
+		{
+			AlertBox.display("Error", "Prosze wypelnic wszystkie pola");
+			return;
+		}
+		
+		DayDao dayDao = new DayDao();
+		YearDao yearDao = new YearDao();
+		MonthDao monthDao = new MonthDao();
+		HourDao hourDao = new HourDao();
+		TermDAO termDao = new TermDAO();
+		CarDao carDao = new CarDao();
+		ExaminationCardDao examinationCardDao = new ExaminationCardDao();
+		
+		termsList.getItems().removeAll(termsList.getItems());
+		LocalDate date = datePicker.getValue();
+
+		Term term = new Term();
+
+		Year year = yearDao.get(date.getYear());
+		Month month = monthDao.get(date.getMonthValue());
+		Day day = dayDao.get(date.getDayOfMonth());
+
+		for (int hourID = 1; hourID <= 20; hourID++) {
+			term = new Term(year, month, day, hourDao.get(hourID));
+			termDao.update(term);
+
+			if (canOrderPractical()) {
+				List<Car> allCars = carDao.getAll();
+				int numberOfCars = allCars.size();
+				if (numberOfCars > examinationCardDao.numberOfCarsUsed(term)) {
+					/*
+					 * List<Car> busyCars = examinationCardDao.getCars(term); Car freeCar = null;
+					 * for (Car car : allCars) { if(!busyCars.contains(car)) freeCar = car; }
+					 */
+					termsList.getItems().add(term);
+
+				}
+			}
+
+		}
+		termsList.refresh();
+	}
+
+	private boolean canOrderPractical() {
+		List<TheoreticalExam> theoreticalExams = user.getTheoreticalExams();
+
+		ExamResultDao examResultDao = new ExamResultDao();
+
+		for (TheoreticalExam exam : theoreticalExams) {
+			List<ExamResult> examResults = examResultDao.get(exam);
+			for (ExamResult result : examResults) {
+				if (result.getEgzaminowany().equals(user) && result.getWynik().equals("POZYTYWNY"))
+					return true;
+			}
+		}
+		return true;
+	}
+
+	@FXML
+	private void orderOnClick(ActionEvent event) {
+
+	}
+
+	@FXML
+	private void returnOnClick(ActionEvent event) {
+
+	}
+
+	@FXML
+	void termsListClicked(MouseEvent event) {
+		if(termsList.getSelectionModel().getSelectedItem() != null)
+		this.orderTermButton.setDisable(false);
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		ExamCategoryDao examCategoryDao = new ExamCategoryDao();
+		List<ExamCategory> examCategories = examCategoryDao.getAll();
+
+		categoryChoiceBox.getItems().addAll(examCategories);
+		/*
+		 * HourDao hourDao = new HourDao(); Hour hour = hourDao.get(1);
+		 * termsList.getItems().add(hour);
+		 */
+
+	}
+
+}

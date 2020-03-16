@@ -1,0 +1,65 @@
+package tables;
+
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name="examTaskResult")
+public class ExamTaskResult {
+
+	@EmbeddedId
+	private ExamTaskResultId id;
+	
+	@Column(name="result")
+	private int result;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@MapsId("taskId")
+	private ExamTask examTask;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@MapsId("examCardId")
+	private ExaminationCard examCard;
+	
+	public ExamTaskResult() {
+		
+	}
+
+	public ExamTaskResult(int result, ExamTask examTask, ExaminationCard examCard) {
+		this.result = result;
+		this.examTask = examTask;
+		this.examCard = examCard;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+
+	public ExamTask getExamTask() {
+		return examTask;
+	}
+
+	public void setExamTask(ExamTask examTask) {
+		this.examTask = examTask;
+	}
+
+	public ExaminationCard getExamCard() {
+		return examCard;
+	}
+
+	public void setExamCard(ExaminationCard examCard) {
+		this.examCard = examCard;
+	}
+	
+}

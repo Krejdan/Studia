@@ -1,0 +1,105 @@
+package application;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import server.Request;
+import server.RequestType;
+import tables.ExaminationCard;
+import tables.User;
+import util.Connection;
+
+public class ExaminerViewController implements Initializable {
+
+	@FXML
+	private Button unlockExamButton;
+
+	@FXML
+	private Button downloadExamCardButton;
+
+	private User user;
+
+	public void initUser(User user) {
+		this.user = user;
+	}
+
+	@FXML
+	void downloadExamCardClicked(ActionEvent event) {
+		try {
+			Connection.request = new Request();
+			Connection.request.setUser(user);
+			Connection.request.setType(RequestType.GET_EXAMINATION_CARD);
+			Connection.getOutput().writeObject(Connection.request);
+			Request received = new Request();
+			received = (Request) Connection.getInput().readObject();
+			if(received.getResult()) {
+				startPracticalExam(received.getExaminationCard());
+			}
+			else {
+				AlertBox.display("Error", received.getMessage());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void unlockTheoreticalExamClicked(ActionEvent event) {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("UnlockTheoreticalExamView.fxml"));
+		Parent unlockTheoreticalExamView;
+		try {
+			unlockTheoreticalExamView = loader.load();
+			Scene unlockTheoreticalExamScene = new Scene(unlockTheoreticalExamView);
+
+			UnlockTheoreticalExamController unlockTheoreticalExamController = loader.getController();
+			unlockTheoreticalExamController.initUser(this.user);
+
+			Stage window = (Stage) downloadExamCardButton.getScene().getWindow();
+			window.setScene(unlockTheoreticalExamScene);
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
+	private void startPracticalExam(ExaminationCard exam) {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("PracticalExamView.fxml"));
+		Parent practicalExamView;
+		try {
+			practicalExamView = loader.load();
+			Scene practicalExamScene = new Scene(practicalExamView);
+
+			PracticalExamController practicalExamController = loader.getController();
+			practicalExamController.initUser(this.user);
+			practicalExamController.initExam(exam);
+
+			Stage window = (Stage) downloadExamCardButton.getScene().getWindow();
+			window.setScene(practicalExamScene);
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+	}
+
+}

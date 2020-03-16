@@ -1,0 +1,28 @@
+package daos;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import tables.Hour;
+import util.HibernateUtil;
+
+public class HourDao {
+	
+	public void add(Hour entity) {
+		Transaction transaction = null;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+  
+    	try {
+            transaction = session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+        	session.close();
+        }	
+	}
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../dark_theme.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ClientViewController">
+   <children>
+      <HBox alignment="CENTER" layoutX="378.0" layoutY="344.0" prefHeight="33.0" prefWidth="525.0">
+         <children>
+            <Button fx:id="orderTermButton" mnemonicParsing="false" onAction="#orderTermButtonClicked" text="ZAMÓW TERMIN">
+               <HBox.margin>
+                  <Insets right="50.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="startExamButton" mnemonicParsing="false" onAction="#startExamButtonClicked" prefHeight="33.0" prefWidth="313.0" text="ROZPOCZNIJ EGZAMIN TEORETYCZNY" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

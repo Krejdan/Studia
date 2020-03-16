@@ -1,0 +1,86 @@
+package util;
+
+import daos.*;
+import tables.*;
+
+public class InitializeDatabase {
+
+	public static void initializeTerms() {
+		
+		HourDao hourDao = new HourDao();
+		YearDao yearDao = new YearDao();
+		MonthDao monthDao = new MonthDao();
+		DayDao dayDao = new DayDao();
+		
+		Hour hour = new Hour();
+		
+		for(int i=8; i<18; i++)
+		{
+			hour = new Hour(i, 0);
+			hourDao.add(hour);
+			hour = new Hour(i, 30);
+			hourDao.add(hour);
+			
+		}
+		
+		Day day = new Day();
+		
+		for(int i=1; i<32; i++)
+		{
+			day = new Day(i);
+			dayDao.add(day);
+		}
+		
+		Month month = new Month();
+		
+		for(int i=1; i<13; i++)
+		{
+			month = new Month(i);
+			monthDao.add(month);
+		}
+		
+		Year year = new Year();
+		
+		for(int i=2019; i<2101; i++)
+		{
+			year = new Year(i);
+			yearDao.add(year);
+		}
+	}
+	
+	public static void initializeResources() {
+		ResourceDao resourceDao = new ResourceDao();
+		
+		Resource resource = new Resource("ExaminationCard");
+		resourceDao.add(resource);
+		resource = new Resource("Question");
+		resourceDao.add(resource);
+		resource = new Resource("ExamResult");
+		resourceDao.add(resource);
+		resource = new Resource("TheoriticalExam");
+		resourceDao.add(resource); 
+	}
+	
+	public static void initializePositions() {
+		PositionDao positionDao = new PositionDao();
+		
+		Position position = new Position("Gosc", "gosc");
+		positionDao.add(position);
+		
+		position = new Position("Egzaminator", "egzaminator");
+		positionDao.add(position);
+		
+		position = new Position("Klient", "klient");
+		positionDao.add(position);
+		
+		position = new Position("Pracownik administracyjny", "Pracownik administracyjny");
+		positionDao.add(position);
+	}
+	
+	public static void main(String[] args) {
+		
+				
+		
+	}
+	
+}

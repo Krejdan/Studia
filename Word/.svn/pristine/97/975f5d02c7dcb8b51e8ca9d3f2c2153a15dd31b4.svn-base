@@ -1,0 +1,135 @@
+package tables;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="ExamTasks")
+public class ExamTask {
+	
+	@Id
+	@SequenceGenerator(name="examTasksSeq", sequenceName="exam_tasks_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="examTasksSeq")
+	@Column(name="task_id")
+	private int taskId;
+	
+	@Column(name="name")
+	private String name;
+
+	@ManyToMany()
+	@JoinTable(
+			name = "CategoryTask",
+			joinColumns = {@JoinColumn(name="task_id") },
+			inverseJoinColumns = {@JoinColumn(name="category_id") }
+	)
+	private List<ExamCategory> categories = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "examTask")
+	private List<ExamTaskResult> examTaskResults = new ArrayList<>();
+	
+	public void addCategory(ExamCategory examCategory) {
+		categories.add(examCategory);
+		examCategory.getTasks().add(this);
+	}
+	
+	public void removeCategory(ExamCategory examCategory) {
+		categories.remove(examCategory);
+		examCategory.getTasks().remove(this);
+	}
+	
+	public ExamTask() {
+		
+	}
+
+	public ExamTask(String name) {
+		this.name = name;
+	}
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<ExamCategory> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<ExamCategory> categories) {
+		this.categories = categories;
+	}
+
+	public List<ExamTaskResult> getExamTaskResults() {
+		return examTaskResults;
+	}
+
+	public void setExamTaskResults(List<ExamTaskResult> examTaskResults) {
+		this.examTaskResults = examTaskResults;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((categories == null) ? 0 : categories.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + taskId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamTask other = (ExamTask) obj;
+		if (categories == null) {
+			if (other.categories != null)
+				return false;
+		} else if (!categories.equals(other.categories))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (taskId != other.taskId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+	
+	
+	
+}

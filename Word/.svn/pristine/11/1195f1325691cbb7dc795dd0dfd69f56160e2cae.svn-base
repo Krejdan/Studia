@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../dark_theme.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="application.ExaminerViewController">
+   <children>
+      <HBox alignment="CENTER" layoutX="161.0" layoutY="344.0">
+         <children>
+            <Button fx:id="showExamsButton" mnemonicParsing="false" onAction="#showExamsClicked" prefWidth="286.0" text="ZOBACZ EGZAMINY">
+               <HBox.margin>
+                  <Insets right="50.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="unlockExamButton" mnemonicParsing="false" onAction="#unlockTheoreticalExamClicked" text="ODBLOKUJ EGZAMIN TEORETYCZNY">
+               <HBox.margin>
+                  <Insets right="50.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="downloadExamCardButton" mnemonicParsing="false" onAction="#downloadExamCardClicked" prefWidth="286.0" text="POBIERZ KARTĘ EGZAMINACYJNĄ" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

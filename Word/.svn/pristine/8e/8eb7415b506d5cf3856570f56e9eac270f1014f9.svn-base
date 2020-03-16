@@ -1,0 +1,220 @@
+package tables;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="questions")
+public class Question {
+	
+	@Id
+	@SequenceGenerator(name="questionsSeq", sequenceName="questions_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="questionsSeq")
+	@Column(name="question_id")
+	private int questionId;
+	
+	@Column(name="question")
+	private String question;
+	
+	@Column(name="image")
+	private byte[] image;
+	
+	@Column(name="answer1")
+	private String answer1;
+	
+	@Column(name="answer2")
+	private String answer2;
+	
+	@Column(name="answer3")
+	private String answer3;
+	
+	@Column(name="correct_answer")
+	private String correctAnswer;
+	
+	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name="resource_id")
+	private Resource resource;
+	
+	@OneToMany(
+			mappedBy="question",
+			cascade=CascadeType.ALL,
+			orphanRemoval=true
+			)
+	private List<QuestionResult> examResults = new ArrayList<>();
+	
+	public Question() {
+		
+	}
+
+	public Question(String question, byte[] image, String answer1, String answer2, String answer3, String correctAnswer, Resource resource) {
+		this.question = question;
+		this.image = image;
+		this.answer1 = answer1;
+		this.answer2 = answer2;
+		this.answer3 = answer3;
+		this.correctAnswer = correctAnswer;
+		this.resource = resource;
+	}
+
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getAnswer1() {
+		return answer1;
+	}
+
+	public void setAnswer1(String answer1) {
+		this.answer1 = answer1;
+	}
+
+	public String getAnswer2() {
+		return answer2;
+	}
+
+	public void setAnswer2(String answer2) {
+		this.answer2 = answer2;
+	}
+
+	public String getAnswer3() {
+		return answer3;
+	}
+
+	public void setAnswer3(String answer3) {
+		this.answer3 = answer3;
+	}
+
+	public String getCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public void setCorrectAnswer(String correctAnswer) {
+		this.correctAnswer = correctAnswer;
+	}
+
+	public Resource getResource() {
+		return resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	public List<QuestionResult> getExamResults() {
+		return examResults;
+	}
+
+	public void setExamResults(List<QuestionResult> examResults) {
+		this.examResults = examResults;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((answer1 == null) ? 0 : answer1.hashCode());
+		result = prime * result + ((answer2 == null) ? 0 : answer2.hashCode());
+		result = prime * result + ((answer3 == null) ? 0 : answer3.hashCode());
+		result = prime * result + ((correctAnswer == null) ? 0 : correctAnswer.hashCode());
+		result = prime * result + ((examResults == null) ? 0 : examResults.hashCode());
+		result = prime * result + Arrays.hashCode(image);
+		result = prime * result + ((question == null) ? 0 : question.hashCode());
+		result = prime * result + questionId;
+		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Question other = (Question) obj;
+		if (answer1 == null) {
+			if (other.answer1 != null)
+				return false;
+		} else if (!answer1.equals(other.answer1))
+			return false;
+		if (answer2 == null) {
+			if (other.answer2 != null)
+				return false;
+		} else if (!answer2.equals(other.answer2))
+			return false;
+		if (answer3 == null) {
+			if (other.answer3 != null)
+				return false;
+		} else if (!answer3.equals(other.answer3))
+			return false;
+		if (correctAnswer == null) {
+			if (other.correctAnswer != null)
+				return false;
+		} else if (!correctAnswer.equals(other.correctAnswer))
+			return false;
+		if (examResults == null) {
+			if (other.examResults != null)
+				return false;
+		} else if (!examResults.equals(other.examResults))
+			return false;
+		if (!Arrays.equals(image, other.image))
+			return false;
+		if (question == null) {
+			if (other.question != null)
+				return false;
+		} else if (!question.equals(other.question))
+			return false;
+		if (questionId != other.questionId)
+			return false;
+		if (resource == null) {
+			if (other.resource != null)
+				return false;
+		} else if (!resource.equals(other.resource))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Question [questionId=" + questionId + ", question=" + question + ", image=" + Arrays.toString(image)
+				+ ", answer1=" + answer1 + ", answer2=" + answer2 + ", answer3=" + answer3 + ", correctAnswer="
+				+ correctAnswer + ", resource=" + resource + "]";
+	}
+	
+		
+}

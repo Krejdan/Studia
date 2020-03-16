@@ -1,0 +1,67 @@
+package repositories;
+
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import tables.Resource;
+import tables.Resource_;
+import tables.User;
+import util.HibernateUtil;
+
+public class ResourcesDAO {
+	public void saveResource(Resource resource) {
+
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            // start a transaction
+
+            transaction = session.beginTransaction();
+
+            // save the object
+            
+            session.save(resource);
+
+            // commit transaction
+
+            transaction.commit();
+            System.out.println("Dodawanie udane");
+
+        } catch (Exception e) {
+
+            if (transaction != null) {
+
+                transaction.rollback();
+
+            }
+
+            e.printStackTrace();
+
+        }
+
+    }
+	
+    public Resource getResourceByID(int resourceID) {
+        Session session = null;
+        Resource resource = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            resource = session.get(Resource.class, resourceID);
+            System.out.println(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return resource;
+    }
+}

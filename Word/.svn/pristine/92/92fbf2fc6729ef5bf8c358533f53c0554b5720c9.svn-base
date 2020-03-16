@@ -1,0 +1,74 @@
+package repositories;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import tables.ExaminationCard;
+import util.HibernateUtil;
+
+public class ExaminationCardDAO {
+	
+	public void saveExaminationCard(ExaminationCard examinationCard) {
+
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+
+            // start a transaction
+
+            transaction = session.beginTransaction();
+
+            // save the object
+            
+            session.save(examinationCard);
+
+            // commit transaction
+
+            transaction.commit();
+            System.out.println("Dodawanie udane");
+
+        } catch (Exception e) {
+
+            if (transaction != null) {
+
+                transaction.rollback();
+
+            }
+
+            e.printStackTrace();
+
+        } finally {
+        	if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+
+    }
+	
+	public List < ExaminationCard > getExaminationCard() {
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            return session.createQuery("from ExaminationCard", ExaminationCard.class).list();
+
+        }
+
+    }
+	
+	public ExaminationCard getExaminationCardById(int examCardId) {
+        Session session = null;
+        ExaminationCard examinationCard = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            examinationCard =  (ExaminationCard) session.get(ExaminationCard.class, examCardId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return examinationCard;
+    }
+}

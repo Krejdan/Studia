@@ -1,0 +1,60 @@
+package test;
+
+import java.util.Date;
+
+import daos.*;
+import tables.*;
+
+public class InitialTest {
+
+	public static void main(String[] args) {
+
+		UserDao userDao = new UserDao();
+		TermDAO terminDao = new TermDAO();
+		QuestionDao questionDao = new QuestionDao();
+		ExaminationCardDao examinationCardDao = new ExaminationCardDao();
+		PositionDao positionDao = new PositionDao();
+		PermissionDAO permissionDao = new PermissionDAO();
+		ResourceDao resourceDao = new ResourceDao();
+
+		Resource resource = new Resource("ExamCard");
+		
+
+		Operation operation = new Operation("Kopiowanie", 1);
+		//Position position = new Position("Egzaminowany", null);
+		Position position = positionDao.get(1);
+		Permission permission = new Permission(position, resource, operation);
+		//permissionDao.savePermission(permission);
+		Term term = new Term(new Year(2020), new Month(6), new Day(12), new Hour(12, 30));
+		//terminDao.add(term);
+		//position = new Position("Egzaminator", null);
+		User user = new User("Ramesh", "Fadatare", new Date(), "terh@javaguides.com", "12345");
+		//User user1 = new User("Emil", "Emil", new Date(), "test@test.test", "54321");
+		user.addPosition(positionDao.getByName("Egzaminator"));
+		//user.addPosition(position);
+		//user1.addPosition(position);
+		//usersDao.add(user1);
+		userDao.add(user);
+		
+		//ExaminationCard examinationCard = new ExaminationCard("B", "Brak", "Pozytywny", term, resourceDao.get(1), userDao.get(1), userDao.get(8));
+		//examinationCardDao.add(examinationCard);
+
+		/*
+		 * Session session = HibernateUtil.getSessionFactory().openSession();
+		 * session.beginTransaction(); ExaminationCard newExamCard =
+		 * session.get(ExaminationCard.class, examinationCard.getExamCardId());
+		 * System.out.println(newExamCard.getEgzaminowany());
+		 * session.getTransaction().commit();
+		 */
+		//List<ExaminationCard> examinationCards = examinationCardDao.getAll();
+		//user = usersDao.get(1);
+		//System.out.println(user);
+		/*
+		 * for(ExaminationCard e : examinationCards) {
+		 * System.out.println(e.getExaminer().toString()); } for(Question q1 :
+		 * questions) { System.out.println(q1.toString()); }
+		 */
+
+	}
+
+}

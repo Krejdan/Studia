@@ -1,0 +1,133 @@
+package tables;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name="positions")
+public class Position implements Serializable{
+
+	@Transient
+	private static final long serialVersionUID = 4963175149872082943L;
+
+	@Id
+	@SequenceGenerator(name="positionsSeq", sequenceName="positions_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="positionsSeq")
+	@Column(name="position_id")
+	private int positionId;
+	
+	@Column(name="role")
+	private String role;
+	
+	@Column(name="description")
+	private String description;
+	
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="positions")
+	private List<User> users = new ArrayList<>();
+	
+	@OneToMany(
+			mappedBy="position",
+			cascade= {CascadeType.PERSIST, CascadeType.MERGE}
+	)
+	private List<Permission> permissions;
+	
+	public Position() {
+	}
+
+
+	public Position(String role, String description) {
+		this.role = role;
+		this.description = description;
+	}
+
+
+	public int getPositionId() {
+		return positionId;
+	}
+
+
+	public void setPositionId(int positionId) {
+		this.positionId = positionId;
+	}
+
+
+	public String getRole() {
+		return role;
+	}
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Position [positionId=" + positionId + ", role=" + role + ", description=" + description + "]";
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Position other = (Position) obj;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		return true;
+	}
+	
+	
+	
+	
+}

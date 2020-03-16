@@ -1,0 +1,147 @@
+package application;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import repositories.QuestionDAO;
+import tables.Question;
+import util.FXUtil;
+
+public class TheoreticalExamController implements Initializable {
+
+	@FXML
+	private Label questionText;
+
+	@FXML
+	private Label questionNumber;
+
+	@FXML
+	private ImageView questionImage;
+
+	@FXML
+	private RadioButton answerButton1;
+
+	@FXML
+	private ToggleGroup answerButtonsGroup;
+
+	@FXML
+	private RadioButton answerButton2;
+
+	@FXML
+	private RadioButton answerButton3;
+
+	@FXML
+	private RadioButton answerButton4;
+
+	@FXML
+	private Button answerQuestionButton;
+
+	@FXML
+	private Label timeLeftTimer;
+
+	@FXML
+	private Button finishExamButton;
+
+	private final static int examTime = 120;
+	private Timeline timer;
+	private int secondsLeft;
+	private int currentQuestion;
+	private int numberOfQuestions;
+	private List<Question> questions = new ArrayList<>();
+
+	@FXML
+	void answerQuestionClicked(ActionEvent event) {
+
+		if (answerButtonsGroup.getSelectedToggle() == null)
+			AlertBox.display("B³¹d", "Nale¿y zaznaczyæ odpowiedŸ");
+		else if (currentQuestion == numberOfQuestions - 1)
+			endExam();
+		else {
+			answerButtonsGroup.selectToggle(null);
+			questionNumber.setText(String.format("%d/%d", currentQuestion + 2, numberOfQuestions));
+			questionText.setText(questions.get(++currentQuestion).getQuestion());
+		}
+	}
+
+	@FXML
+	void finishClicked(ActionEvent event) {
+		endExam();
+	}
+
+	private void endExam() {
+		AlertBox.display("", "Koniec egzaminu!");
+
+		Parent examResultView;
+		try {
+			examResultView = FXMLLoader.load(getClass().getResource("LoginScreen.fxml"));
+			Scene examResultScene = new Scene(examResultView);
+			Stage window = (Stage) questionText.getScene().getWindow();
+
+			window.setScene(examResultScene);
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		secondsLeft = examTime;
+		currentQuestion = 0;
+		numberOfQuestions = 10;
+
+		// Database connection
+		QuestionDAO questionDao = new QuestionDAO();
+		questions = questionDao.getTenRandomQuestions();
+
+		// Initialize controller
+		questionText.setText(questions.get(0).getQuestion());
+		questionNumber.setText(String.format("%d/%d", currentQuestion + 1, numberOfQuestions));
+		// questionImage.setImage(FXUtil.getJavaFXImage(questions.get(0).getImage(),
+		// 687, 366));
+
+		byte[] data = questions.get(0).getImage();
+		InputStream targetStream = new ByteArrayInputStream(data);
+		questionImage.setImage(new Image(targetStream));
+
+		// questionImage.setImage(new Image("/questions/example.png"));
+
+		timer = new Timeline(new KeyFrame(Duration.seconds(0), event -> {
+			timeLeftTimer.setText(String.format("%d:%02d", secondsLeft / 60, secondsLeft % 60));
+			secondsLeft--;
+		}), new KeyFrame(Duration.seconds(1)));
+		timer.setCycleCount(examTime + 1);
+		timer.setOnFinished(e -> Platform.runLater(() -> {
+			endExam();
+		}));
+		timer.play();
+
+	}
+
+}

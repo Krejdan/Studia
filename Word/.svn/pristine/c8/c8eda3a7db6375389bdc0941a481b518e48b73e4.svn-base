@@ -1,0 +1,117 @@
+package tables;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="ExamTask")
+public class ExamTask {
+	
+	@Id
+	@SequenceGenerator(name="examTasksSeq", sequenceName="exam_tasks_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="examTasksSeq")
+	@Column(name="task_id")
+	private int taskId;
+	
+	@Column(name="name")
+	private String name;
+	
+	@ManyToMany(mappedBy="tasks")
+	private List<ExamCategory> categories = new ArrayList<>();
+	
+	@OneToMany(
+	        mappedBy = "examTask",
+	        cascade = CascadeType.ALL,
+	        orphanRemoval = true
+	    )
+	private List<ExamTaskResult> examinationCards = new ArrayList<>();
+	
+	public ExamTask() {
+		
+	}
+
+	public ExamTask(String name) {
+		this.name = name;
+	}
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<ExamCategory> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<ExamCategory> categories) {
+		this.categories = categories;
+	}
+
+	
+	public List<ExamTaskResult> getExaminationCards() {
+		return examinationCards;
+	}
+
+	public void setExaminationCards(List<ExamTaskResult> examinationCards) {
+		this.examinationCards = examinationCards;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((categories == null) ? 0 : categories.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + taskId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamTask other = (ExamTask) obj;
+		if (categories == null) {
+			if (other.categories != null)
+				return false;
+		} else if (!categories.equals(other.categories))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (taskId != other.taskId)
+			return false;
+		return true;
+	}
+	
+	
+	
+}

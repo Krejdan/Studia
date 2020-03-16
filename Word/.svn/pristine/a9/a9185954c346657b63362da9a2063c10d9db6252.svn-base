@@ -1,0 +1,152 @@
+package application;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import server.Request;
+import server.RequestType;
+import tables.Position;
+import tables.User;
+import util.Connection;
+
+public class LoginController implements Initializable {
+
+	@FXML
+	private Button IPGroupMembersButton;
+
+	@FXML
+	private TextField usernameField;
+
+	@FXML
+	private PasswordField passwordField;
+
+	@FXML
+	private Button loginButton;
+
+	@FXML
+	private Button helpButton;
+
+	private User user;
+
+	@FXML
+	void loginButtonClick(ActionEvent event) throws IOException {
+		if (verifyLogin()) {
+			String username = usernameField.getText();
+			if (user.getPositions().contains(new Position("Klient", "Klient"))) {
+				
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("TheoreticalExam.fxml"));
+				Parent theoreticalExamView = loader.load();
+				Scene theoreticalExamScene = new Scene(theoreticalExamView);
+				
+				TheoreticalExamController theoreticalExamController = loader.getController();
+				theoreticalExamController.initUser(user);
+				
+				try {
+					Connection.request = new Request();
+					Connection.request.setType(RequestType.START_THEORETICAL_EXAM);
+					Connection.request.setUser(user);
+					Connection.getOutput().writeObject(Connection.request);
+					Request received = new Request();
+					received = (Request) Connection.getInput().readObject();
+					if (received.getResult()) {
+						theoreticalExamController.initQuestions(received.getQuestions());
+						theoreticalExamController.initExam(received.getTheoreticalExam());
+						Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+						window.setScene(theoreticalExamScene);
+						window.show();
+					} else {
+						AlertBox.display("Error", received.getMessage());
+					}
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			if (user.getPositions().contains(new Position("Egzaminator", "Egzaminator"))) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("ExaminerMainView.fxml"));
+				Parent examinerView = loader.load();
+				Scene examinerMainScene = new Scene(examinerView);
+
+				ExaminerViewController examinerViewController = loader.getController();
+				examinerViewController.initUser(user);
+
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				window.setScene(examinerMainScene);
+				window.show();
+			}
+			if (username.equals("order")) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("OrderTermView.fxml"));
+				Parent orderTermView = loader.load();
+				Scene orderTermScene = new Scene(orderTermView);
+
+				OrderTermController orderTermController = loader.getController();
+				orderTermController.initUser(user);
+
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				window.setScene(orderTermScene);
+				window.show();
+			}
+		} else {
+
+		}
+
+	}
+
+	@FXML
+	void IPGroupMembersButtonOnClick(ActionEvent event) {
+		AlertBox.display("Sk³ad grupy",
+				"Grupa: 3ID14A\nTemat: WORD\nAleksandra Chabik\nAdrian Cheba\nKamil Dudek\nPrzemys³aw Gar³owski");
+	}
+
+	@FXML
+	void helpButtonOnClick(ActionEvent event) {
+		AlertBox.display("Pomoc", "Nazwa u¿ytkownika: admin\nHas³o: admin\n");
+	}
+
+	boolean verifyLogin() {
+		Request received = new Request();
+		try {
+			String username = usernameField.getText();
+			String password = passwordField.getText();
+			Connection.request = new Request();
+			Connection.request.setType(RequestType.LOGIN);
+			Connection.request.setMail(username);
+			Connection.request.setPassword(password);
+
+			Connection.getOutput().writeObject(Connection.request);
+
+			received = (Request) Connection.getInput().readObject();
+			if (received.getResult()) {
+				user = received.getUser();
+			} else {
+				AlertBox.display("Error", received.getMessage());
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (received.getResult());
+	}
+
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

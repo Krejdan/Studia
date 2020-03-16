@@ -1,0 +1,195 @@
+package tables;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="examinationCards")
+public class ExaminationCard {
+	
+	@Id
+	@SequenceGenerator(name="examinationCardsSeq", sequenceName="examination_cards_Seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="examinationCardsSeq")
+	@Column(name="examcard_id")
+	private int examCardId;
+	
+	@Column(name="car_number")
+	private int carNumber;
+	
+	@ManyToOne
+	@JoinColumn(name="category_id")
+	private ExamCategory category;
+	
+	@Column(name="comments")
+	private String comments;
+	
+	@Column(name="result")
+	private String result;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="term_id")
+	private Term term;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="resources_id")
+	private Resource resource;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="examiner")
+	private User examiner;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="examined")
+	private User examined;
+	
+	@OneToMany(
+			mappedBy="examCard",
+			cascade=CascadeType.ALL,
+			orphanRemoval=true
+	)
+	private List<ExamTaskResult> examTasks = new ArrayList<>();
+	
+	public ExaminationCard() {
+		
+	}
+
+	public ExaminationCard(ExamCategory category, int carNumber, String comments, String result, Term term, Resource resource, User examiner,
+			User examined) {
+		super();
+		this.carNumber = carNumber;
+		this.category = category;
+		this.comments = comments;
+		this.result = result;
+		this.term = term;
+		this.resource = resource;
+		this.examiner = examiner;
+		this.examined = examined;
+	}
+	
+	public void addTask(ExamTask task, int result) {
+        ExamTaskResult examTaskResult = new ExamTaskResult(result, task, this);
+        examTasks.add(examTaskResult);
+        task.getExaminationCards().add(examTaskResult);
+    }
+ 
+    public void removeTag(ExamTask task) {
+        for (Iterator<ExamTaskResult> iterator = examTasks.iterator();
+             iterator.hasNext(); ) {
+        	ExamTaskResult examTaskResult = iterator.next();
+ 
+            if (examTaskResult.getExamCard().equals(this) &&
+                    examTaskResult.getExamTask().equals(task)) {
+                iterator.remove();
+                examTaskResult.getExamTask().getExaminationCards().remove(examTaskResult);
+                examTaskResult.setExamTask(null);
+                examTaskResult.setExamCard(null);
+            }
+        }
+    }
+    
+	public int getExamCardId() {
+		return examCardId;
+	}
+
+	public void setExamCardId(int examCardId) {
+		this.examCardId = examCardId;
+	}
+	
+	public int getCarNumber() {
+		return carNumber;
+	}
+
+	public void setCarNumber(int carNumber) {
+		this.carNumber = carNumber;
+	}
+
+	public ExamCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(ExamCategory category) {
+		this.category = category;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public Term getTerm() {
+		return term;
+	}
+
+	public void setTerm(Term term) {
+		this.term = term;
+	}
+
+	public Resource getResource() {
+		return resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	public User getExaminer() {
+		return examiner;
+	}
+
+	public void setExaminer(User examiner) {
+		this.examiner = examiner;
+	}
+
+	public User getExamined() {
+		return examined;
+	}
+
+	public void setExamined(User examined) {
+		this.examined = examined;
+	}
+
+	public List<ExamTaskResult> getExamTasks() {
+		return examTasks;
+	}
+
+	public void setExamTasks(List<ExamTaskResult> examTasks) {
+		this.examTasks = examTasks;
+	}
+
+	@Override
+	public String toString() {
+		return "ExaminationCard [examCardId=" + examCardId + ", category=" + category + ", comments=" + comments
+				+ ", result=" + result + ", term=" + term + ", resource=" + resource + ", examiner=" + examiner
+				+ ", examined=" + examined + "]";
+	}
+	
+	
+	
+	
+	
+}

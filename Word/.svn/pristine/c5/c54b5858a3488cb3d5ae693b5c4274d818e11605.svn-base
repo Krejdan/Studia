@@ -1,0 +1,58 @@
+package test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import daos.*;
+import tables.*;
+
+public class InsertQuestions {
+
+	public void insertExampleQuestions() {
+		try {
+			byte[] data = Files.readAllBytes(Paths.get(this.getClass().getResource("/questions/example.jpg").toURI()));
+
+			QuestionDao qdao = new QuestionDao();
+			ResourceDao rdao = new ResourceDao();
+			Resource resourceTest = new Resource("Pytanie");
+			rdao.add(resourceTest);
+			Question question = new Question();
+			Resource resource = rdao.get(1);
+			System.out.println(resource);
+			question.setQuestion("Czy mo¿na jechac pod pr¹d?");
+			question.setAnswer1("Tak");
+			question.setAnswer2("Zale¿y");
+			question.setAnswer3("Tylko na drogach dwupasmowych");
+			question.setCorrectAnswer("Nie");
+			question.setImage(data);
+			question.setExtension("jpg");
+			question.setResource(resource);
+			qdao.add(question);
+			for (int i = 0; i < 10; i++) {
+				question = new Question();
+				question.setQuestion("Czy mo¿na przekraczac prêdkoœc o 20km/h w obszarze zabudowanym?");
+				question.setAnswer1("Tak");
+				question.setAnswer2("Tylko na trasie Sielpia-Koñskie");
+				question.setAnswer3("Tylko po 23");
+				question.setCorrectAnswer("Nie");
+				question.setImage(data);
+				question.setExtension("jpg");
+				question.setResource(resource);
+				qdao.add(question);
+			}
+
+		} catch (IOException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void main(String[] args) {
+		InsertQuestions testInsert = new InsertQuestions();
+		testInsert.insertExampleQuestions();
+
+	}
+
+}

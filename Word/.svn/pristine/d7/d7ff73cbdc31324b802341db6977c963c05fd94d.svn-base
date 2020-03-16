@@ -1,0 +1,56 @@
+package test;
+
+import daos.*;
+import tables.*;
+
+public class InitializeDatabase {
+
+	public void initializeTerms() {
+		
+		HourDao hourDao = new HourDao();
+		YearDao yearDao = new YearDao();
+		MonthDao monthDao = new MonthDao();
+		DayDao dayDao = new DayDao();
+		
+		Hour hour = new Hour();
+		
+		for(int i=8; i<18; i++)
+		{
+			hour = new Hour(i, 0);
+			hourDao.add(hour);
+			hour = new Hour(i, 30);
+			hourDao.add(hour);
+			
+		}
+		
+		Day day = new Day();
+		
+		for(int i=1; i<32; i++)
+		{
+			day = new Day(i);
+			dayDao.add(day);
+		}
+		
+		Month month = new Month();
+		
+		for(int i=1; i<13; i++)
+		{
+			month = new Month(i);
+			monthDao.add(month);
+		}
+		
+		Year year = new Year();
+		
+		for(int i=2019; i<2101; i++)
+		{
+			year = new Year(i);
+			yearDao.add(year);
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		
+	}
+	
+}

@@ -1,0 +1,85 @@
+package application;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+public class LoginController implements Initializable {
+
+	@FXML
+	private Button IPGroupMembersButton;
+
+	@FXML
+	private TextField usernameField;
+
+	@FXML
+	private PasswordField passwordField;
+
+	@FXML
+	private Button loginButton;
+
+	@FXML
+	private Button helpButton;
+
+	@FXML
+	void loginButtonClick(ActionEvent event) throws IOException {
+		//if (verifyLogin()) {
+		String username = usernameField.getText();
+		if(username.equals("teo")) {
+			Parent tableViewParent = FXMLLoader.load(getClass().getResource("TheoreticalExam.fxml"));
+			Scene tableViewScene = new Scene(tableViewParent);
+
+			// This line gets the Stage information
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+			window.setScene(tableViewScene);
+			window.show();
+		}
+		if(username.equals("practical")) {
+			Parent tableViewParent = FXMLLoader.load(getClass().getResource("PracticalExamView.fxml"));
+			Scene tableViewScene = new Scene(tableViewParent);
+
+			// This line gets the Stage information
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+			window.setScene(tableViewScene);
+			window.show();
+		}
+	}
+
+	@FXML
+	void IPGroupMembersButtonOnClick(ActionEvent event) {
+		AlertBox.display("Sk³ad grupy", "Grupa: 3ID14A\nTemat: WORD\nAleksandra Chabik\nAdrian Cheba\nKamil Dudek\nPrzemys³aw Gar³owski");
+	}
+
+	@FXML
+	void helpButtonOnClick(ActionEvent event) {
+		AlertBox.display("Pomoc", "Nazwa u¿ytkownika: admin\nHas³o: admin\n");
+	}
+
+	boolean verifyLogin() {
+		String username = usernameField.getText();
+		String password = passwordField.getText();
+		System.out.println(username + " " + password);
+		return (username.equals("admin") && password.equals("admin"));
+	}
+
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

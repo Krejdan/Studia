@@ -1,0 +1,148 @@
+package tables;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="TheoriticalExam")
+public class TheoriticalExam {
+	
+	@Id
+	@SequenceGenerator(name="theoriticalExamSeq", sequenceName="theoritical_exam_seq", allocationSize=1, initialValue=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="theoriticalExamSeq")
+	@Column(name="exam_id")
+	private int examId;
+	
+	@Column(name="kategoria")
+	private String kategoria;
+	
+	@ManyToOne
+	@JoinColumn(name="termin_id")
+	private Term term;
+	
+	@ManyToOne
+	@JoinColumn(name="resources_id")
+	private Resource resource;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id_egzaminator")
+	private User egzaminator;
+	
+	public TheoriticalExam() {
+		
+	}
+
+	public TheoriticalExam(String kategoria, Term term, Resource resource, User egzaminator) {
+		super();
+		this.kategoria = kategoria;
+		this.term = term;
+		this.resource = resource;
+		this.egzaminator = egzaminator;
+	}
+
+	public int getExamId() {
+		return examId;
+	}
+
+	public void setExamId(int examId) {
+		this.examId = examId;
+	}
+
+	public String getKategoria() {
+		return kategoria;
+	}
+
+	public void setKategoria(String kategoria) {
+		this.kategoria = kategoria;
+	}
+
+	public Resource getResources() {
+		return resource;
+	}
+
+	public void setResources(Resource resource) {
+		this.resource = resource;
+	}
+
+	public User getEgzaminator() {
+		return egzaminator;
+	}
+
+	public void setEgzaminator(User egzaminator) {
+		this.egzaminator = egzaminator;
+	}
+
+	public Term getTermin() {
+		return term;
+	}
+
+	public void setTermin(Term term) {
+		this.term = term;
+	}
+
+	public Resource getResource() {
+		return resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((egzaminator == null) ? 0 : egzaminator.hashCode());
+		result = prime * result + examId;
+		result = prime * result + ((kategoria == null) ? 0 : kategoria.hashCode());
+		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
+		result = prime * result + ((term == null) ? 0 : term.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TheoriticalExam other = (TheoriticalExam) obj;
+		if (egzaminator == null) {
+			if (other.egzaminator != null)
+				return false;
+		} else if (!egzaminator.equals(other.egzaminator))
+			return false;
+		if (examId != other.examId)
+			return false;
+		if (kategoria == null) {
+			if (other.kategoria != null)
+				return false;
+		} else if (!kategoria.equals(other.kategoria))
+			return false;
+		if (resource == null) {
+			if (other.resource != null)
+				return false;
+		} else if (!resource.equals(other.resource))
+			return false;
+		if (term == null) {
+			if (other.term != null)
+				return false;
+		} else if (!term.equals(other.term))
+			return false;
+		return true;
+	}
+	
+	
+	
+	
+}

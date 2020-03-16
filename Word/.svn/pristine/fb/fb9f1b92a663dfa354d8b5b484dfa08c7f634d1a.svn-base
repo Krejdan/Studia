@@ -1,0 +1,52 @@
+package test;
+
+import java.util.List;
+
+import daos.ExamCategoryDao;
+import daos.ExamTaskDao;
+import daos.ResourceDao;
+import tables.ExamCategory;
+import tables.ExamTask;
+import tables.Resource;
+
+public class InsertTasks {
+
+	private Resource taskResource;
+	private List<ExamCategory> categories;
+	
+	public InsertTasks() {
+		ResourceDao rdao = new ResourceDao();
+		this.taskResource = rdao.get(1);
+		categories = getCategories();
+	}
+	
+	public void insertTask(String name) {
+		ExamTask task = new ExamTask(name);
+		task.setCategories(categories);
+		ExamTaskDao etdao = new ExamTaskDao();
+		
+		etdao.add(task);
+			
+	}
+	
+	private List<ExamCategory> getCategories() {
+		ExamCategoryDao examCategoryDao = new ExamCategoryDao();
+		categories = examCategoryDao.getAll();
+		return categories;
+	}
+	
+	public void insertExampleTasks() {
+		insertTask("Zawracanie");
+		insertTask("Parkowanie prostopad³e");
+		insertTask("Parkowanie równoleg³e");
+		insertTask("Hamowanie awaryjne");
+
+	}
+
+	public static void main(String[] args) {
+		InsertTasks testInsert = new InsertTasks();
+		testInsert.insertExampleTasks();
+
+	}
+
+}
